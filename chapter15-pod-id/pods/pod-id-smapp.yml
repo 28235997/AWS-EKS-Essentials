@@ -1,0 +1,26 @@
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: pod-service-account
+  namespace: default
+---
+kind: Pod
+apiVersion: v1
+metadata:
+  name: smapp
+  labels:
+    app: smapp
+spec:
+  serviceAccountName: pod-service-account
+  containers:
+    - name: smapp
+      image: cloudmanly/eks:smapp
+      imagePullPolicy: Always
+      ports:
+        - containerPort: 8080
+      env:
+      - name: REGION
+        value: us-east-1
+      - name: SECRET_NAME
+        value: app-secret-1

@@ -1,0 +1,18 @@
+#routes
+---
+apiVersion: appmesh.k8s.aws/v1beta2
+kind: GatewayRoute
+metadata:
+  name: app-route
+  namespace: lbrns
+spec:
+  httpRoute:
+    match:
+      prefix: "/"
+    action:
+      target:
+        port: 8085
+        virtualService:
+          virtualServiceRef:
+            name: router-v-svc
+            namespace: lbrns

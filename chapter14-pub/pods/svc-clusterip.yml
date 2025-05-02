@@ -1,0 +1,13 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: blueapp-svc
+  labels: 
+    svc: blueapp-svc-label
+spec:
+  selector:
+    app: blueapp-label
+  ports:
+  - port: 8081 #service port, can be any port
+    name: app-port
+    targetPort: 8080 #your app or container/pod or port

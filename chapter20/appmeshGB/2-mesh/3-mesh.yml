@@ -1,0 +1,18 @@
+
+apiVersion: appmesh.k8s.aws/v1beta2
+kind: Mesh
+metadata:
+  name: bgmesh
+spec:
+  namespaceSelector:
+    matchLabels:
+      mesh: bgmesh
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: bgns
+  labels:
+    mesh: bgmesh
+    gateway: ingress-gateway
+    appmesh.k8s.aws/sidecarInjectorWebhook: enabled

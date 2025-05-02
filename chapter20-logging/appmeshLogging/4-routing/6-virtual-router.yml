@@ -1,0 +1,54 @@
+---
+apiVersion: appmesh.k8s.aws/v1beta2
+kind: VirtualRouter
+metadata:
+  namespace: lbrns
+  name: app-router
+spec:
+  listeners:
+    - portMapping:
+       port: 8085
+       protocol: http
+  routes:
+    - name: app-route
+      httpRoute:
+        match:
+          prefix: '/'
+        action:
+         weightedTargets:
+            - virtualNodeRef:
+                name: green
+              weight: 50
+              port: 8081
+            - virtualNodeRef:
+                name: blue
+              weight: 50
+              port: 8080
+---
+apiVersion: appmesh.k8s.aws/v1beta2
+kind: VirtualService
+metadata:
+  namespace: lbrns
+  name: router-v-svc
+spec:
+  awsName: router-v-svc.lbrns.svc.cluster.local
+  provider:
+    virtualRouter:
+      virtualRouterRef:
+        name: app-router
+
+#dummy coredns service
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name:  router-v-svc
+  namespace: lbrns
+  labels:
+    app: router-v-svc
+spec:
+  ports:
+    - port: 8085
+      name: http
+  selector:
+    app: router-v-svc

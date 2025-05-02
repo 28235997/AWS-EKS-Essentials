@@ -1,0 +1,48 @@
+---
+apiVersion: appmesh.k8s.aws/v1beta2
+kind: VirtualNode
+metadata:
+  name: blue
+  namespace: lbrns
+spec:
+  podSelector:
+    matchLabels:
+       app: blue
+  listeners:
+    - portMapping:
+        port: 8080
+        protocol: http
+      healthCheck:
+        protocol: http
+        path: '/'
+        healthyThreshold: 2
+        unhealthyThreshold: 2
+        timeoutMillis: 2000
+        intervalMillis: 5000
+  serviceDiscovery:
+    dns:
+      hostname: blue.lbrns.svc.cluster.local
+---
+apiVersion: appmesh.k8s.aws/v1beta2
+kind: VirtualNode
+metadata:
+  name: green
+  namespace: lbrns
+spec:
+  podSelector:
+    matchLabels:
+       app: green
+  listeners:
+    - portMapping:
+        port: 8081
+        protocol: http
+      healthCheck:
+        protocol: http
+        path: '/'
+        healthyThreshold: 2
+        unhealthyThreshold: 2
+        timeoutMillis: 2000
+        intervalMillis: 5000
+  serviceDiscovery:
+    dns:
+      hostname: green.lbrns.svc.cluster.local

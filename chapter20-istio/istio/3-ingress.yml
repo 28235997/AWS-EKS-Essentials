@@ -1,0 +1,37 @@
+apiVersion: networking.istio.io/v1alpha3
+kind: Gateway
+metadata:
+  name: istio-gateway
+  namespace: istions
+spec:
+  selector:
+    istio: ingressgateway  # use istio default controller
+  servers:
+  - port:
+      number: 80
+      name: http
+      protocol: HTTP
+    hosts:
+    - "*"
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: blue-green
+  namespace: istions
+spec:
+  hosts:
+  - "*"
+  gateways:
+  - istio-gateway
+  http:
+  - match:
+    - uri:
+        prefix: "/"
+    route:
+        - destination:
+            host: green
+          weight: 50
+        - destination:
+            host: blue
+          weight: 50

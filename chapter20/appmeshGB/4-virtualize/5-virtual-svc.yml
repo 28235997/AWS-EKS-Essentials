@@ -1,0 +1,64 @@
+
+---
+apiVersion: appmesh.k8s.aws/v1beta2
+kind: VirtualService
+metadata:
+  name: blue
+  namespace: bgns
+  labels:
+     app: blue
+spec:
+  awsName: blue.bgns.svc.cluster.local
+  provider:
+    virtualNode:
+      virtualNodeRef:
+        name: blue
+        namespace: bgns
+
+#dummy service to make the native CoreDNS to resolve  virtual-svc.default.svc.cluster.local to the cluster service IP for the envoy sidecar.
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: blue
+  namespace: bgns
+  labels:
+    app: blue
+spec:
+  ports:
+  - port: 8080
+    name: http
+  selector:
+    app: blue
+  
+---
+apiVersion: appmesh.k8s.aws/v1beta2
+kind: VirtualService
+metadata:
+  name: green
+  namespace: bgns
+  labels:
+    app: green
+spec:
+  awsName: green.bgns.svc.cluster.local
+  provider:
+    virtualNode:
+      virtualNodeRef:
+        name: green
+        namespace: bgns
+
+#dummy service to make the native CoreDNS to resolve  virtual-svc.default.svc.cluster.local to the cluster service IP for the envoy sidecar.
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: green
+  namespace: bgns
+  labels:
+     app: green
+spec:
+  ports:
+  - port: 8081
+    name: http
+  selector:
+    app: green

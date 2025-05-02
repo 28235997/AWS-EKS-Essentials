@@ -1,0 +1,22 @@
+---
+apiVersion: appmesh.k8s.aws/v1beta2
+kind: VirtualGateway
+metadata:
+  name: ingress-gateway
+  namespace: lbrns
+spec:
+  namespaceSelector:
+    matchLabels:
+      gateway: ingress-gateway
+  podSelector:
+    matchLabels:
+      app: ingress-gateway
+  listeners:
+    - portMapping:
+        port: 8088
+        protocol: http
+  logging:
+    accessLog:
+      file:
+        path: "/dev/stdout"
+         

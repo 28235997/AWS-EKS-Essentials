@@ -1,0 +1,28 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: blueapp-deployment
+  labels:
+    app: blueapp
+spec:
+  replicas: 3
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 1
+      maxSurge: 1
+  selector:
+    matchLabels:
+     app: blueapp
+     environment: dev
+  template:
+    metadata:
+     labels:
+      app: blueapp
+      environment: dev
+    spec:
+      containers:
+       - name: blueapp
+         image: cloudmanly/eks:blueapp
+         imagePullPolicy: Always

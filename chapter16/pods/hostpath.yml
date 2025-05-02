@@ -1,0 +1,22 @@
+---
+kind: Pod
+apiVersion: v1
+metadata:
+  name: blueapp
+spec:
+  volumes:
+   - name: persistent-vol
+     hostPath:
+         path: /persistent-data
+         type: DirectoryOrCreate
+  containers:
+  - name: blueapp
+    image: cloudmanly/eks:blueapp
+    ports:
+      - containerPort: 8080
+    command: ["/bin/sh"]
+    args: ["-c", "while true; do echo $(date -u) >> /data/out.txt; sleep 5; done"]
+    volumeMounts:
+    - name: persistent-vol
+      mountPath: /data
+

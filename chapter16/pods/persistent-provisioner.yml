@@ -1,0 +1,43 @@
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: nfs-csi
+provisioner: nfs.csi.k8s.io
+parameters:
+  server: 10.0.5.194
+  share: /mnt/nfs_share/ 
+reclaimPolicy: Delete
+volumeBindingMode: Immediate
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name:  nfs-pvc
+spec:
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 2Gi
+  storageClassName: nfs-csi
+
+---
+kind: Pod
+apiVersion: v1
+metadata:
+  name: blueapp
+spec:
+  containers:
+  - name: blueapp
+    image: cloudmanly/eks:blueapp
+    ports:
+      - containerPort: 8080
+    command: ["/bin/sh"]
+    args: ["-c", "while true; do echo $(date -u) >> /data/out.txt; sleep 5; done"]
+    volumeMounts:
+    - name: persistent-storage
+      mountPath: /data
+  volumes:
+   - name: persistent-storage
+     persistentVolumeClaim:
+       claimName: nfs-pvc

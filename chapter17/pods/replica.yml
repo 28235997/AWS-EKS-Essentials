@@ -1,0 +1,21 @@
+---
+apiVersion: apps/v1
+kind: ReplicaSet
+metadata:
+  name: blueapp
+  labels:
+    app: blueapp
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+     environment: dev
+  template:
+    metadata:
+     labels:
+      environment: dev
+    spec:
+      containers:
+       - name: blueapp
+         image: cloudmanly/eks:blueapp
+         imagePullPolicy: Always

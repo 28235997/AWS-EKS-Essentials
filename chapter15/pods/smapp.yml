@@ -1,0 +1,28 @@
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: irsa-service-account
+  namespace: default
+  annotations:
+    eks.amazonaws.com/role-arn: arn:aws:iam::${ACCOUNT_ID}:role/MyIRSARole
+---
+kind: Pod
+apiVersion: v1
+metadata:
+  name: smapp
+  labels:
+    app: smapp
+spec:
+  serviceAccountName: irsa-service-account
+  containers:
+    - name: smapp
+      image: cloudmanly/eks:smapp
+      imagePullPolicy: Always
+      ports:
+        - containerPort: 8080
+      env:
+      - name: REGION
+        value: us-east-1
+      - name: SECRET_NAME
+        value: app-secret-1

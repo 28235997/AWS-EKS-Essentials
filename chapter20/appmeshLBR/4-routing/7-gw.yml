@@ -1,0 +1,35 @@
+---
+apiVersion: appmesh.k8s.aws/v1beta2
+kind: VirtualGateway
+metadata:
+  name: ingress-gateway
+  namespace: lbrns
+spec:
+  namespaceSelector:
+    matchLabels:
+      gateway: ingress-gateway
+  podSelector:
+    matchLabels:
+      app: ingress-gateway
+  listeners:
+    - portMapping:
+        port: 8088
+        protocol: http
+---
+apiVersion: appmesh.k8s.aws/v1beta2
+kind: GatewayRoute
+metadata:
+  name: app-route
+  namespace: lbrns
+spec:
+  httpRoute:
+    match:
+      prefix: "/"
+    action:
+      target:
+        port: 8085
+        virtualService:
+          virtualServiceRef:
+            name: router-v-svc
+            namespace: lbrns
+         

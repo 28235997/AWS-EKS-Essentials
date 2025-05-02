@@ -1,0 +1,29 @@
+#run this command to export ACCOUNT_ID=$(aws sts get-caller-identity --query "Account" --output text)
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: standalone-envoy-proxy
+  namespace: lbrns
+  labels:
+    app: ingress-gateway
+spec:
+    replicas: 1
+    selector:
+     matchLabels:
+       app: ingress-gateway
+    template:
+     metadata:
+      labels:
+        app: ingress-gateway
+     spec:
+      containers:
+        - name: envoy #name must be envoy
+          image: 840364872350.dkr.ecr.us-east-1.amazonaws.com/aws-appmesh-envoy:v1.27.2.0-prod 
+          env:
+          - name: APPMESH_RESOURCE_ARN
+            value:  arn:aws:appmesh:us-east-1:552247556312:mesh/lbrmesh/virtualGateway/ingress-gateway_lbrns 
+          - name: ENVOY_LOG_LEVEL
+            value: "debug"
+          ports:
+           - containerPort: 8088

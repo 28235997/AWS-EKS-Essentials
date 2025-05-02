@@ -1,0 +1,64 @@
+
+---
+apiVersion: appmesh.k8s.aws/v1beta2
+kind: VirtualService
+metadata:
+  name: blue
+  namespace: lbrns
+  labels:
+     app: blue
+spec:
+  awsName: blue.lbrns.svc.cluster.local
+  provider:
+    virtualNode:
+      virtualNodeRef:
+        name: blue
+        namespace: lbrns
+
+#dummy CoreDNS service 
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: blue
+  namespace: lbrns
+  labels:
+    app: blue
+spec:
+  ports:
+  - port: 8080
+    name: http
+  selector:
+    app: blue
+
+---
+apiVersion: appmesh.k8s.aws/v1beta2
+kind: VirtualService
+metadata:
+  name: green
+  namespace: lbrns
+  labels:
+     app: green
+spec:
+  awsName: green.lbrns.svc.cluster.local
+  provider:
+    virtualNode:
+      virtualNodeRef:
+        name: green
+        namespace: lbrns
+
+#dummy CoreDNS servcie 
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: green
+  namespace: lbrns
+  labels:
+    app: green
+spec:
+  ports:
+  - port: 8081
+    name: http
+  selector:
+    app: green

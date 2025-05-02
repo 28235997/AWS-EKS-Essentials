@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: blueapp
+  labels:	
+    app: blueapp
+spec:
+  containers:
+    - name: blueapp
+      image: cloudmanly/eks:blueapp
+      ports:
+        - containerPort: 8080

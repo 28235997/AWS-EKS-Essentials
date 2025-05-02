@@ -1,0 +1,13 @@
+kind: Namespace
+apiVersion: v1
+metadata:
+ name: istions
+ labels:
+    name: istions
+---
+kind: Namespace
+apiVersion: v1
+metadata:
+  name: istions
+  labels:
+    istio-injection: enabled

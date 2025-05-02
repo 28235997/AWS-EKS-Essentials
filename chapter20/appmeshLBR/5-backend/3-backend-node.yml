@@ -1,0 +1,32 @@
+---
+apiVersion: appmesh.k8s.aws/v1beta2
+kind: VirtualNode
+metadata:
+  name: backend
+  namespace: lbrns
+  labels:
+    app: backend
+spec:
+  podSelector:
+    matchLabels:
+        app: backend
+  listeners:
+    - portMapping:
+        port: 8082
+        protocol: http
+  backends:
+    - virtualService:
+        virtualServiceRef:
+            namespace: lbrns
+            name: blue
+    - virtualService:
+        virtualServiceRef:
+            namespace: lbrns
+            name: green
+    - virtualService:
+        virtualServiceRef:
+            namespace: lbrns
+            name: router-v-svc
+  serviceDiscovery:
+    dns:
+      hostname: backend.lbrns.svc.cluster.local

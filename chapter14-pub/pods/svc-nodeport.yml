@@ -1,0 +1,15 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: blueapp-svc
+  labels: 
+    svc: blueapp-svc-label
+spec:
+  type: NodePort
+  selector:
+    app: blueapp-label
+  ports:
+  - port: 8082 #service port, can be any port
+    nodePort: 30001 #nodport between 30000-32767
+    name: app-port
+    targetPort: 8080 #your app or container/pod or port

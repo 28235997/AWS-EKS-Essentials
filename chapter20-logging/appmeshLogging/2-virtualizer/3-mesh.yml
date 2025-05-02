@@ -1,0 +1,18 @@
+
+apiVersion: appmesh.k8s.aws/v1beta2
+kind: Mesh
+metadata:
+  name: lbrmesh
+spec:
+  namespaceSelector:
+    matchLabels:
+      mesh: lbrmesh
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: lbrns
+  labels:
+    mesh: lbrmesh
+    gateway: ingress-gateway
+    appmesh.k8s.aws/sidecarInjectorWebhook: enabled
