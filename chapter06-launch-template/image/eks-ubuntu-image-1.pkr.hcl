@@ -14,8 +14,6 @@ packer {
     }
   }
 }
-
-
 source "amazon-ebs" "amazon-2" {
   ami_name      = "custom-amazon-image-packer-1"
   instance_type = "t3.small"
@@ -23,8 +21,6 @@ source "amazon-ebs" "amazon-2" {
   source_ami    = "ami-00ec84c1189958713"
   ssh_username = "root"
 }
-
-
 build {
   name = "custom-amazon-build"
   sources = [
