@@ -1,0 +1,47 @@
+#change the file system id to the current
+---
+kind: StorageClass
+apiVersion: storage.k8s.io/v1
+metadata:
+ name: efs-sc
+provisioner: efs.csi.aws.com
+parameters:
+  provisioningMode: efs-ap
+  fileSystemId: fs-096a2882b320d92a5
+  directoryPerms: "700"
+  gidRangeStart: "1000" # optional
+  gidRangeEnd: "2000" # optional
+  ensureUniqueDirectory: "true" # optional
+  reuseAccessPoint: "false" # optional
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: efs-claim
+spec:
+  accessModes:
+    - ReadWriteMany
+  storageClassName: efs-sc
+  resources:
+   requests:
+     storage: 4Gi
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: efs-app
+spec:
+  containers:
+  - name: blueapp
+    image: cloudmanly/eks:blueapp
+    ports:
+      - containerPort: 8080
+    command: ["/bin/sh"]
+    args: ["-c", "while true; do echo $(date -u) >> /data/out.txt; sleep 5; done"]
+    volumeMounts:
+    - name: persistent-storage
+      mountPath: /data
+  volumes:
+  - name: persistent-storage
+    persistentVolumeClaim:
+      claimName: efs-claim
