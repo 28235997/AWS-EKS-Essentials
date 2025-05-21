@@ -1,4 +1,5 @@
-resource "aws_eks_cluster" "public_endpoint_cluster" {
+resource "aws_eks_cluster" "public_endpoint_cluster" { #specifies the type of resource Terraform should create
+# the aws_eks_clustercombines the resource provider’s name and resource type, the public_endpoint_clusteris the resource identifier
   name     = var.cluster_name
   version  = var.cluster_version
   role_arn = aws_iam_role.cluster_role.arn
