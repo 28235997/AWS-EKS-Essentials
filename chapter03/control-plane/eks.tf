@@ -8,6 +8,8 @@ resource "aws_eks_cluster" "public_endpoint_cluster" { #specifies the type of re
     subnet_ids = concat(
       var.private_subnet_ids
     )
+    # you can add Public Endpoint Restrictions
+    #public_access_cidrs = ["181.10.0.0/32"] 
     endpoint_public_access  = "true"
   }
   depends_on = [ aws_iam_role.cluster_role ]
