@@ -10,6 +10,7 @@ resource "aws_eks_cluster" "private_endpoint_cluster" {
     )
     endpoint_private_access = "true"
     endpoint_public_access  = "true"
+    # control who can access endpoint
     public_access_cidrs = ["193.16.23.22/32"] 
   }
   
